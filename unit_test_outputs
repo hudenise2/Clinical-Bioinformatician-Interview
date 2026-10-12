@@ -1,0 +1,15 @@
+>> python3 NGS_Coverage_ExerciseB.py
+
+--- test_gene_annotation_splitting ---
+PASS: parser: number of exons
+PASS: parser: first gene symbol
+PASS: parser: second gene symbol
+PASS: parser: third gene symbol
+PASS: parser: first accession
+PASS: parser: second accession
+PASS: parser: third accession
+
+--- test_missing_gene_is_detected ---
+PASS: check_panel: missing genes
+
+All tests completed.
