@@ -167,10 +167,9 @@ class CoverageReport:
         if missing_genes:
             lines.append("")
             lines.append("# Genes in panel with no coverage data (MISSING)")
-            lines.append("GeneSymbol\tTotalExons\tFailingExons\tMinCoverage%\t \
-            WorstExon(chr:start-end)\tStatus")
+            lines.append("GeneSymbol\tTotalExons\tFailingExons\tStatus")
             for symbol in missing_genes:
-                lines.append(symbol+"\t-\t-\t-\t-\tMISSING")
+                lines.append(symbol+"\t-\t-\ttMISSING")
         return "\n".join(lines) + "\n"
 
 # Helper functions
