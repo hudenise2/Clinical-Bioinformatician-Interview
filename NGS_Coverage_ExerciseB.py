@@ -135,7 +135,7 @@ def test_gene_annotation_splitting():
     check("parser: number of exons", len(exons), 3)
     # Extract the Gene symbol (part before ';').
     check("parser: first gene symbol", exons[0].gene_symbol, "MYH7")
-    check("parser: third gene symbol", exons[1].gene_symbol, "MYH7")
+    check("parser: second gene symbol", exons[1].gene_symbol, "MYH7.1")
     check("parser: third gene symbol", exons[2].gene_symbol, "TTN")
     # Extract the accession (part after ';').
     check("parser: first accession", exons[0].accession, "NM_000257.3")
