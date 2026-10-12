@@ -208,7 +208,8 @@ def parse_sambamba(path):
                 else:
                     gene = gene_field
                     accession = ""
-                if len(gene.strip()) == 0:
+                gene=gene.strip()
+                if len(gene) == 0:
                     logging.warning(f"Line {line_count}: missing gene symbol; skipping")
                     continue
                 try:
