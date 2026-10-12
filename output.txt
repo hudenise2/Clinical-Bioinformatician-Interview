@@ -13,5 +13,5 @@ BIN1	19	1	99.90	2:127825728-127825841	FAIL
 Sample NGS148_34: 7/84 genes below 30x threshold
 
 # Genes in panel with no coverage data (MISSING)
-GeneSymbol	TotalExons	FailingExons	MinCoverage%	             WorstExon(chr:start-end)	Status
-DYSF	-	-	-	-	MISSING
+GeneSymbol	TotalExons	FailingExons	Status
+DYSF	-	-	MISSING
