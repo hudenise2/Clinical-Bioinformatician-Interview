@@ -1,0 +1,17 @@
+# NGS Coverage Report — Sample NGS148_34
+# Threshold: every coding base >= 30x
+
+GeneSymbol	TotalExons	FailingExons	MinCoverage%	WorstExon(chr:start-end)	Status
+NEB	181	17	0.00	2:152437300-152437428	FAIL
+FKRP	1	1	0.00	19:47258697-47260205	FAIL
+LAMA2	65	3	12.07	6:129371052-129371243	FAIL
+SELENON	13	1	49.26	1:26126711-26126914	FAIL
+MSTO1	14	1	83.02	1:155581469-155581628	FAIL
+ZC4H2	5	1	84.70	X:64138911-64139094	FAIL
+BIN1	19	1	99.90	2:127825728-127825841	FAIL
+
+Sample NGS148_34: 7/84 genes below 30x threshold
+
+# Genes in panel with no coverage data (MISSING)
+GeneSymbol	TotalExons	FailingExons	MinCoverage%	             WorstExon(chr:start-end)	Status
+DYSF	-	-	-	-	MISSING
