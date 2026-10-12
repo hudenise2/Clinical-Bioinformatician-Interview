@@ -121,7 +121,7 @@ def test_gene_annotation_splitting():
         "#chromosome\tStart\tEnd\tSize\tReadCount\t\t"
         "GeneSymbol;Accession\t\t\t\tpercentage30\n"
         "chr1\t100\t200\t100\t50\t\tMYH7;NM_000257.3\t\t\t\t100.0\n"
-        "chr1\t300\t400\t100\t50\t\tMYH7.;NM_000257.4\t\t\t\t95.0\n"
+        "chr1\t300\t400\t100\t50\t\tMYH7 ;NM_000257.4\t\t\t\t95.0\n"
         "chr1\t500\t600\t100\t50\t\tTTN;NM_001267550.2\t\t\t\t80.0\n"
     )
     tempfile = open("temp_test", "w")
@@ -135,7 +135,7 @@ def test_gene_annotation_splitting():
     check("parser: number of exons", len(exons), 3)
     # Extract the Gene symbol (part before ';').
     check("parser: first gene symbol", exons[0].gene_symbol, "MYH7")
-    check("parser: second gene symbol", exons[1].gene_symbol, "MYH7.1")
+    check("parser: second gene symbol", exons[1].gene_symbol, "MYH7")
     check("parser: third gene symbol", exons[2].gene_symbol, "TTN")
     # Extract the accession (part after ';').
     check("parser: first accession", exons[0].accession, "NM_000257.3")
@@ -149,7 +149,7 @@ def test_missing_gene_is_detected():
         "#chromosome\tStart\tEnd\tSize\tReadCount\t\t"
         "GeneSymbol;Accession\t\t\t\tpercentage30\n"
         "chr1\t100\t200\t100\t50\t\tMYH7;NM_000257.3\t\t\t\t100.0\n"
-        "chr1\t300\t400\t100\t50\t\tMYH7.;NM_000257.4\t\t\t\t95.0\n"
+        "chr1\t300\t400\t100\t50\t\tMYH7;NM_000257.4\t\t\t\t95.0\n"
         "chr1\t500\t600\t100\t50\t\tTTN;NM_001267550.2\t\t\t\t80.0\n"
     )
     panel_text = "MYH7\nTTN\nGHOST\n"
