@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 NGS Coverage Report exercise (part A)
 
@@ -26,7 +27,6 @@ import re
 import sys
 from pathlib import Path
 
-
 class Exon:
     """Handle data from one row from the sambamba output"""
 
@@ -44,7 +44,6 @@ class Exon:
 
 class Gene:
     """Aggregate the exon data and the coverage for a single gene.
-
     A gene is built from a list of its Exons and the closs' methods report:
       - how many unique exons it has
       - the minimum coverage %
@@ -93,7 +92,6 @@ class Gene:
             return "FAIL"
         return "PASS"
 
-
     def report_row(self):
         """return a ne tab-separated row per gene for the summary table."""
         min_cov = "NA" if self.min_coverage is None else f"{self.min_coverage:.2f}"
@@ -107,18 +105,6 @@ class Gene:
             worst_region,
             self.status,
         ])
-'''
-    def detail_lines(self):
-        """Per-exon detail lines for a failing gene (Part B)."""
-        lines = []
-        for exon in sorted(self.failing_exons, key=lambda e: e.percentage30):
-            lines.append(
-                f"#   {exon.region}\t{exon.percentage30:.2f}%\t"
-                f"accession={exon.accession or 'NA'}"
-            )
-        return lines
-'''
-
 
 class CoverageReport:
     """Generate the final report: a collection of Gene objects with status."""
@@ -128,7 +114,6 @@ class CoverageReport:
         self.threshold = threshold
         self.genes = {}          # Gene objects named by gene symbol
         self.panel_genes = []    # ordered list obtained from the panel file
-
 
     def add_exon(self, exon):
         """Add an exon to Gene objects or creating the Gene object first if not already existing."""
@@ -150,8 +135,7 @@ class CoverageReport:
         """return as sorted list of Gene objects according to their min coverage"""
         failing = [g for g in self.genes.values() if g.status == "FAIL"]
         return sorted( failing,
-            key=lambda g: g.min_coverage if g.min_coverage is not None else 999.0,
-        )
+            key=lambda g: g.min_coverage if g.min_coverage is not None else 999.0)
 
     @property
     def total(self):
@@ -165,37 +149,21 @@ class CoverageReport:
             f"genes below {self.threshold:g}x threshold")
         return line
 
-
-    def render(self, missing_genes):
+    def create_report(self, missing_genes):
         """return the header line and the data lines constituting the report"""
         lines = [
             f"# NGS Coverage Report — Sample {self.sample_name}",
             f"# Threshold: every coding base >= {self.threshold:g}x",
             "",
             "GeneSymbol\tTotalExons\tFailingExons\tMinCoverage%\t"
-            "WorstExon(chr:start-end)\tStatus",
-        ]
+            "WorstExon(chr:start-end)\tStatus"]
 
         for gene in self.failing:
             lines.append(gene.report_row())
-
-        '''
-        '# Only used for Part B: detail for each failing gene
-        detail = []
-        for gene in self.failing:
-            detail.append(f"# {gene.symbol}:")
-            detail.extend(gene.detail_lines())
-        if detail:
-            lines.append("")
-            lines.append("# Failing exons (Part B detail)")
-            lines.extend(detail)
-        '''
-
         lines.append("")
         lines.append(self.summary_line())
 
-        # Missing genes (separate section)
-        print(missing_genes)
+        # Missing genes
         if missing_genes:
             lines.append("")
             lines.append("# Genes in panel with no coverage data (MISSING)")
@@ -205,11 +173,7 @@ class CoverageReport:
                 lines.append(symbol+"\t-\t-\t-\t-\tMISSING")
         return "\n".join(lines) + "\n"
 
-
-
-
 # Helper functions
-
 def parse_sambamba(path):
     """Read the sambamba file and return a list of Exon objects.
     Malformed rows are logged and excluded.
@@ -263,10 +227,8 @@ def parse_sambamba(path):
                         end=end,
                         gene_symbol=gene,
                         accession=accession,
-                        percentage30=pct_field)
-                )
+                        percentage30=pct_field))
     return exons
-
 
 def load_panel_genes(path):
     """Read the panel gene list (contains one gene symbol per line).
@@ -296,28 +258,27 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     logging.basicConfig(
-        level=logging.WARNING, format="%(levelname)s: %(message)s"
-    )
+        level=logging.WARNING, format="%(levelname)s: %(message)s")
 
     sample_name = "_".join(args.input.split("/")[-1].split("_")[:2])
-    # 1. Parse the sambamba file into Exon objects.
+    # Parse the sambamba file into Exon objects.
     exons = parse_sambamba(args.input)
 
-    # 2. Build the report, feeding each exon into the appropriate Gene object.
+    # Build the report, feeding each exon into the appropriate Gene object.
     report = CoverageReport(sample_name=sample_name, threshold=args.threshold)
     for exon in exons:
         report.add_exon(exon)
 
-    # 3. Cross-reference the panel list (identify the  MISSING genes).
+    # Cross-reference the panel list (identify the missing genes).
     panel_genes = load_panel_genes(args.genelist)
     missing_genes= report.check_panel(panel_genes)
 
-    # 4. Render the report lines and write.
-    text = report.render(missing_genes)
+    # Generate the report lines and write them to output file.
+    text = report.create_report(missing_genes)
     Path(args.output).write_text(text, encoding="utf-8")
     print(f"Report written to {args.output}")
 
-    # 5. Print the run-level summary line to stdout as required.
+    # Print the run-level summary line to stdout as required.
     print(report.summary_line())
 
     # Optional: give the possibility of changing the script return code if particular
