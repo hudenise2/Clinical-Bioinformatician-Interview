@@ -112,9 +112,10 @@ class CoverageReport:
     def __init__(self, sample_name, threshold):
         self.sample_name = sample_name
         self.threshold = threshold
-        self.genes = {}          # Gene objects named by gene symbol
+        self.genes = {}          # Dictionary with gene symbols as keys and Gene objects as values
         self.panel_genes = []    # ordered list obtained from the panel file
-
+        self.missing_genes = []  # list of genes present in the panel file and not in Gene objects
+    
     def add_exon(self, exon):
         """Add an exon to Gene objects or creating the Gene object first if not already existing."""
         if exon.gene_symbol in self.genes:
@@ -149,7 +150,7 @@ class CoverageReport:
             f"genes below {self.threshold:g}x threshold")
         return line
 
-    def create_report(self, missing_genes):
+    def create_report(self):
         """return the header line and the data lines constituting the report"""
         lines = [
             f"# NGS Coverage Report — Sample {self.sample_name}",
@@ -164,11 +165,11 @@ class CoverageReport:
         lines.append(self.summary_line())
 
         # Missing genes
-        if missing_genes:
+        if self.missing_genes:
             lines.append("")
             lines.append("# Genes in panel with no coverage data (MISSING)")
             lines.append("GeneSymbol\tTotalExons\tFailingExons\tStatus")
-            for symbol in missing_genes:
+            for symbol in self.missing_genes:
                 lines.append(symbol+"\t-\t-\ttMISSING")
         return "\n".join(lines) + "\n"
 
@@ -271,10 +272,10 @@ def main(argv=None):
 
     # Cross-reference the panel list (identify the missing genes).
     panel_genes = load_panel_genes(args.genelist)
-    missing_genes= report.check_panel(panel_genes)
+    report.check_panel(panel_genes)
 
     # Generate the report lines and write them to output file.
-    text = report.create_report(missing_genes)
+    text = report.create_report()
     Path(args.output).write_text(text, encoding="utf-8")
     print(f"Report written to {args.output}")
 
